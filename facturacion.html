@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Restaurante El Despertar Sabroso</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.0.10/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/styles.css">
+  <script src="js/script2.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="amarillo" href="index.html"><img src="pictures/eldespertar-removebg-preview.png" width="90">El despertar </a> <a class="navbar-brand" href="index.html"> sabroso</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <button id="modoBtn" class="btn btn-light"><img
+                    src="pictures/modoscuro.png"
+                    width="27"></button>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+
+  <section class="section main-banner" id="top" data-section="section1">
+    <video autoplay muted loop id="bg-video">
+      <source src="pictures/Sin título.mp4" type="video/mp4" />
+    </video>
+
+    <div class="video-overlay header-text">
+      <div class="caption">
+        <h6>"Empieza cada día con un despertar sabroso que despierte tus sentidos y te llene de energía para conquistar
+          el mundo."
+        </h6>
+        <h2><em>¡Pide</em> ya!</h2>
+        <div class="main-button">
+          <div class="scroll-to-section"><a href="productos.html"><img src="pictures/pngwing.com.png" width="200"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section data-section="section2">
+    <body class="fact">
+        <div class="container-title">
+            <h1>Crear <em>PDF</em></h1>
+        </div>
+
+        <div class="container-data">
+            <div class="container-form">
+                <h3>Formulario</h3>
+
+                <div class="input-nombre">
+                    <label for="nombre">Nombre: </label>
+                    <input type="text" id="input-nombre" required>
+                </div>
+
+                <div class="input-apellido">
+                    <label for="apellido">Apellido: </label>
+                    <input type="text" id="input-apellido" required>
+                </div>
+
+                <div class="input-cedula">
+                    <label for="cedula">Cédula de identidad: </label>
+                    <input type="text" id="input-cedula" required>
+                </div>
+
+                <label>Forma de pago: </label>
+                <div class="input-pago">
+                    <input type="radio" id="efectivo" name="pago" value="efectivo" required>
+                    <label for="efectivo">Efectivo</label>
+                    <input type="radio" id="tarjeta" name="pago" value="tarjeta" required>
+                    <label for="tarjeta">Tarjeta de débito o crédito</label>
+                </div>
+                
+            </div>
+            <div id="carrito" class="container-data-list">
+                <h3 class="h3">Lista de productos</h3>
+                <table id="lista-carrito" class="table-usuarios">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <p id="precio-total">Precio Total: $0.00</p>
+                <input 
+                    class="btn btn-generar-pdf"
+                    type="submit"
+                    id="btn-generar"
+                    value="Generar PDF"
+                    onclick="generarPDF(event)"/>
+                <button id="cancelar-factura" class="btn">Cancelar Factura</button>
+                <script>
+                    document.getElementById("cancelar-factura").addEventListener("click", function() {
+                        var confirmacion = confirm("¿Seguro que quieres cancelar?");
+                        if (confirmacion) {
+                            // Redireccionar si el usuario confirma la cancelación
+                            window.location.href = "index.html"; // Esto recargará la página actual
+                        } else {
+                            // No hacer nada si el usuario cancela la acción
+                            return false;
+                        }
+                    });
+                    </script>
+                    <script>
+                        function generarPDF(event) {
+                            // Obtener datos del formulario
+                            var nombre = document.getElementById("input-nombre").value;
+                            var apellido = document.getElementById("input-apellido").value;
+                            var cedula = document.getElementById("input-cedula").value;
+                        
+                            // Obtener forma de pago seleccionada
+                            var formaPago = "";
+                            var formasPago = document.getElementsByName("pago");
+                            for (var i = 0; i < formasPago.length; i++) {
+                                if (formasPago[i].checked) {
+                                    formaPago = formasPago[i].value;
+                                    break;
+                                }
+                            }
+                        
+                            // Obtener datos de los productos
+                            var productos = [];
+                            var table = document.getElementById("lista-carrito");
+                            for (var i = 1; i < table.rows.length; i++) {
+                                var producto = {
+                                    nombre: table.rows[i].cells[1].innerText,
+                                    precio: table.rows[i].cells[2].innerText
+                                };
+                                productos.push(producto);
+                            }
+                        
+                            // Calcular precio total
+                            var precioTotal = document.getElementById("precio-total").innerText;
+                        
+                            // Crear el PDF
+                            var doc = new jsPDF();
+                            
+                            doc.text(20, 20, "Datos del usuario:");
+                            doc.text(20, 30, "Nombre: " + nombre);
+                            doc.text(20, 40, "Apellido: " + apellido);
+                            doc.text(20, 50, "Cédula de identidad: " + cedula);
+                            doc.text(20, 60, "Forma de pago: " + formaPago);
+                        
+                            doc.text(20, 70, "Productos:");
+                            var y = 80;
+                            productos.forEach(function(producto) {
+                                doc.text(20, y, "Nombre: " + producto.nombre + ", Precio: " + producto.precio);
+                                y += 10;
+                            });
+                        
+                            // Mostrar precio total
+                            doc.text(20, y + 10, "Precio Total: " + precioTotal);
+                        
+                            // Guardar el PDF
+                            doc.save("factura.pdf");
+                        
+                            // Mostrar mensaje de éxito
+                            alert("La factura se realizó exitosamente.");
+                        
+                            // Redireccionar a inicio después de cerrar el mensaje
+                            window.location.href = "index.html"; // Cambia "index.html" por la URL de la página de inicio
+                        }
+                        </script>
+                        
+            </div>
+            
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
+
+    </body>
+  </section>
+  <footer>
+    <p>Desarrollado por Anthony Franco - Página de Factura</p>
+  </footer>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="js/script.js"></script>
+
+</body>
+
+</html>
